@@ -15,8 +15,10 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components.css') }}">
+
     <!-- Start GA -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
+
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -28,6 +30,41 @@
         gtag('config', 'UA-94034622-3');
     </script>
     <!-- END GA -->
+
+    <style>
+        .select2-container {
+            width: 100%;
+            /* Set the width of the Select2 container */
+        }
+
+        .select2-selection {
+            border: 1px solid #ccc;
+            background-color: #ccc;
+            /* Border color */
+            border-radius: 8px;
+            /* Border radius */
+            padding: 7px;
+            /* Padding inside the selection box */
+        }
+
+        .select2-selection__arrow {
+            background-color: #fff;
+            /* Background color of the arrow */
+            margin-top: 7px;
+            /* Border color on the left of the arrow */
+        }
+
+        .select2-dropdown {
+            border: 1px solid #ccc;
+            /* Border color of the dropdown */
+            border-radius: 4px;
+            /* Border radius of the dropdown */
+        }
+
+        .select2-container .select2-selection--single {
+            height: 40px !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -53,12 +90,8 @@
     <script src="{{ asset('library/jquery.nicescroll/dist/jquery.nicescroll.min.js') }}"></script>
     <script src="{{ asset('library/moment/min/moment.min.js') }}"></script>
     <script src="{{ asset('js/stisla.js') }}"></script>
-
     @stack('scripts')
 
-    <!-- Template JS File -->
-    <script src="{{ asset('js/scripts.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 
 </html>

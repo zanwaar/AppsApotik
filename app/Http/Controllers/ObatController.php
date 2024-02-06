@@ -19,6 +19,20 @@ class ObatController extends Controller
 
         return view('daftarobat', ['type_menu' => 'transaksi', 'dataobat' => $dataobat]);
     }
+
+    public function fetch(Request $request)
+    {
+        $query = $request->input('q');
+        $dataobat = DataObat::take(5)->where('nama_obat', 'like', '%' . $query . '%')->get();
+        $responseData = $dataobat->map(function ($obat) {
+            return [
+                'id' => $obat->id,
+                'kode' => $obat->kode,
+                'nama_obat' => $obat->nama_obat,
+            ];
+        });
+        return response()->json($responseData);
+    }
     public function store(Request $request)
     {
         // Validation logic if needed

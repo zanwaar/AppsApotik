@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/detail/{id}', DetailTransaksi::class)->name('detail');
     Route::get('add-transaksi-keluar', AddTransaksiKeluar::class)->name('add-transaksi-keluar');
 });
+Route::get('/fetch', [ObatController::class, 'fetch'])->name('fetch');
 // Layout
 Route::get('/layout-default-layout', function () {
     return view('pages.layout-default-layout', ['type_menu' => 'layout']);
@@ -162,6 +163,10 @@ Route::get('/forms-validation', function () {
 // google maps
 // belum tersedia
 
+// modules
+Route::get('/tes', function () {
+    return view('pages.tes', ['type_menu' => 'modules']);
+});
 // modules
 Route::get('/modules-calendar', function () {
     return view('pages.modules-calendar', ['type_menu' => 'modules']);

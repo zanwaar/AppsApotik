@@ -219,7 +219,6 @@
     window.addEventListener("hide-form", function(event) {
         $("#form").modal("hide");
         $("#confirmationModal").modal("hide");
-        console.log(event);
         iziToast.success({
             title: '' + event.detail[0].message + '',
             message: 'Success',
