@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataObat;
+use App\Models\DetailTransaksi;
+use App\Models\Transaksi;
+use PDF;
 use Illuminate\Http\Request;
 
 class ObatController extends Controller
@@ -19,7 +22,17 @@ class ObatController extends Controller
 
         return view('daftarobat', ['type_menu' => 'transaksi', 'dataobat' => $dataobat]);
     }
-
+    public function createPDF($id)
+    {
+        // retreive all records from db
+        $transaksi = Transaksi::where('id', $id)->first();
+        $data = DetailTransaksi::where('transaksi_id', $transaksi->id)->get();
+        // share data to view
+        view()->share('employee', $data);
+        $pdf = PDF::loadView('pdf_view', $data);
+        // download PDF file with download method
+        return $pdf->download('pdf_file.pdf');
+    }
     public function fetch(Request $request)
     {
         $query = $request->input('q');

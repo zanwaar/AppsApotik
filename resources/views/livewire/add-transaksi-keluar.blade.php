@@ -130,6 +130,96 @@
                 </div>
             </div>
         </section>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="">
+                        @if ($show)
+                        <div class="invoice">
+                            <div class="invoice-print">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="invoice-title">
+                                            <h2>Invoice</h2>
+                                            <div class="invoice-number">{{$transaksi->invoice}}</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- <address>
+                                            <strong>Payment Method:</strong><br>
+                                            Visa ending **** 4242<br>
+                                            ujang@maman.com
+                                        </address> -->
+                                            </div>
+                                            <div class="col-md-6 text-md-right">
+                                                <address>
+                                                    <strong>Tanggal Transaksi:</strong><br>
+                                                    {{date("j F, Y", strtotime($transaksi->tanggal))}}<br><br>
+                                                </address>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h3 class="">List Transaksi {{$transaksi->status}}</h3>
+                                        <div class="table-responsive">
+                                            <table class="table-striped table-hover table-md table">
+                                                <tr class="bg-{{ $transaksi->status_badge }} text-white">
+                                                    <th data-width="5%">#</th>
+                                                    <th data-width="20%">Item</th>
+                                                    <th data-width="20%">Harga Jual</th>
+                                                    <th data-width="10%" class="text-center">Quantity</th>
+                                                    <th data-width="20%">Totals</th>
+                                                </tr>
+                                                @foreach ($detail as $index => $dt )
+                                                <tr>
+                                                    <td>{{$index + 1}}</td>
+                                                    <td>{{$dt->obat->nama_obat}}</td>
+                                                    <td>Rp. {{number_format($dt->obat->harga_jual, 0, ',', '.')}}</td>
+                                                    <td class="text-center">{{ $dt->quantity }}</td>
+                                                    <td>Rp. {{number_format($dt->total_price, 0, ',', '.')}}</td>
+                                                </tr>
+                                                @endforeach
+
+                                            </table>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-lg-8">
+
+                                            </div>
+                                            <div class="col-lg-4 text-right">
+                                                <hr class="mt-2 mb-2">
+                                                <div class="invoice-detail-item">
+                                                    <div class="invoice-detail-name">Total</div>
+                                                    <div class="invoice-detail-value invoice-detail-value-lg">Rp. {{number_format($transaksi->total_price, 0, ',', '.')}}</div>
+                                                </div>
+                                                <!-- <button class="btn btn-warning btn-icon icon-left"><i class="fas fa-print"></i> Print</button> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @push('style')>
@@ -142,6 +232,9 @@
 
 <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
 <script>
+    window.addEventListener("show", function(event) {
+        $("#exampleModal").modal("show");
+    });
     window.addEventListener("allert", function(event) {
         swal(event.detail[0].icon,
             event.detail[0].message,

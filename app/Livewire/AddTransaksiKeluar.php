@@ -13,6 +13,9 @@ class AddTransaksiKeluar extends Component
     public $tasks = [];
     public $sumharga = 0;
     public $idobat;
+    public $show;
+    public $transaksi;
+    public $detail;
     public $state = [
         'id' => '',
         'jenis_obat' => '',
@@ -48,7 +51,7 @@ class AddTransaksiKeluar extends Component
                 'invoice' => $this->generateRandomInvoice(),
                 'tanggal' => now()
             ]);
-
+            $this->transaksi = $transaksi;
             $collect = collect($this->tasks);
 
             // Loop melalui setiap obat dalam transaksi
@@ -75,10 +78,10 @@ class AddTransaksiKeluar extends Component
                     'expired' => $obat['expired'],
                 ]);
             });
-
-
-            $this->dispatch('allert', ['message' => 'added successfully!', 'icon' => 'success']);
-
+            $this->show = true;
+            $this->sumharga = 0;
+            $this->detail = DetailTransaksi::where('transaksi_id', $transaksi->id)->get();
+          
             // If everything is successful, commit the transaction
             DB::commit();
         } catch (\Exception $e) {
@@ -99,6 +102,8 @@ class AddTransaksiKeluar extends Component
             'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
             'expired' => '',
         ];
+        $this->dispatch('show', ['message' => 'added successfully!', 'icon' => 'success']);
+
     }
     public function addTask()
     {
@@ -115,7 +120,7 @@ class AddTransaksiKeluar extends Component
         if (collect($this->tasks)->contains('id', $this->idobat)) {
             $this->state = [
                 'id' => '',
-                'jenis_obat' => '', 
+                'jenis_obat' => '',
                 'kode' => '',
                 'nama_obat' => '',
                 'harga' => '',
