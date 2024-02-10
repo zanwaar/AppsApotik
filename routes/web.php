@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ObatController;
 use App\Livewire\AddTransaksiKeluar;
+use App\Livewire\AddTransaksiMasuk;
 use App\Livewire\DetailTransaksi;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('laporan');
     Route::get('/detail/{id}', DetailTransaksi::class)->name('detail');
     Route::get('add-transaksi-keluar', AddTransaksiKeluar::class)->name('add-transaksi-keluar');
+    Route::get('add-transaksi-masuk', AddTransaksiMasuk::class)->name('add-transaksi-masuk');
+    Route::get('cetakpdf/{id}', [ObatController::class, 'cetak_pdf'])->name('cetakpdf');
 });
 Route::get('/fetch', [ObatController::class, 'fetch'])->name('fetch');
 // Layout

@@ -49,8 +49,13 @@
                                         <tr class="bg-{{ $transaksi->status_badge }} text-white">
                                             <th data-width="5%">#</th>
                                             <th data-width="20%">Item</th>
+                                            @if ($transaksi->status == 'Keluar')
+                                            <th data-width="20%">Harga</th>
+                                            @else
                                             <th data-width="20%">Harga Beli</th>
                                             <th data-width="20%">Harga Jual</th>
+                                            @endif
+
                                             <th data-width="10%" class="text-center">Quantity</th>
                                             <th data-width="20%">Totals</th>
                                         </tr>
@@ -58,8 +63,13 @@
                                         <tr>
                                             <td>{{$index + 1}}</td>
                                             <td>{{$dt->obat->nama_obat}}</td>
+                                            @if ($transaksi->status == 'Keluar')
+                                            <td>Rp. {{number_format($dt->obat->harga_jual, 0, ',', '.')}}</td>
+                                            @else
                                             <td>Rp. {{number_format($dt->obat->harga_beli, 0, ',', '.')}}</td>
                                             <td>Rp. {{number_format($dt->obat->harga_jual, 0, ',', '.')}}</td>
+                                            @endif
+
                                             <td class="text-center">{{ $dt->quantity }}</td>
                                             <td>Rp. {{number_format($dt->total_price, 0, ',', '.')}}</td>
                                         </tr>

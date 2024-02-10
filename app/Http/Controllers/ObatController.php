@@ -22,16 +22,18 @@ class ObatController extends Controller
 
         return view('daftarobat', ['type_menu' => 'transaksi', 'dataobat' => $dataobat]);
     }
-    public function createPDF($id)
+    public function cetak_pdf($id)
     {
-        // retreive all records from db
-        $transaksi = Transaksi::where('id', $id)->first();
-        $data = DetailTransaksi::where('transaksi_id', $transaksi->id)->get();
-        // share data to view
-        view()->share('employee', $data);
-        $pdf = PDF::loadView('pdf_view', $data);
-        // download PDF file with download method
-        return $pdf->download('pdf_file.pdf');
+
+        $transaksi = Transaksi::where('invoice', $id)->first();
+        if ($transaksi == null) {
+            abort(404);
+        }
+
+        $detail = DetailTransaksi::where('transaksi_id', $transaksi->id)->get();
+
+        $pdf = PDF::loadview('pdf.transaksiKeluar', ['transaksi' => $transaksi, 'detail' => $detail]);
+        return $pdf->stream('laporan-pegawai.pdf');
     }
     public function fetch(Request $request)
     {
