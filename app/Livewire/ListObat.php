@@ -32,7 +32,8 @@ class ListObat extends Component
                 'kode' => 'required',
                 'jenis_obat' => 'required',
                 'nama_obat' => 'required',
-                'harga' => 'required',
+                'harga_beli' => 'required',
+                'harga_jual' => 'required',
                 'stok' => 'required',
                 'expired' => 'required',
             ],
@@ -42,7 +43,8 @@ class ListObat extends Component
             'kode' => $this->state['kode'],
             'jenis_obat' => $this->state['jenis_obat'],
             'nama_obat' => $this->state['nama_obat'],
-            'harga' => $this->state['harga'],
+            'harga_beli' => $this->state['harga_beli'],
+            'harga_jual' => $this->state['harga_jual'],
             'stok' => $this->state['stok'],
             'expired' => $this->state['expired'],
         ]);
@@ -65,12 +67,12 @@ class ListObat extends Component
                 'kode' => 'required',
                 'jenis_obat' => 'required',
                 'nama_obat' => 'required',
-                'harga' => 'required',
+                'harga_jual' => 'required',
+                'harga_beli' => 'required',
                 'stok' => 'required',
                 'expired' => 'required',
             ],
         )->validate();
-
         $this->mobat->update($validatedData);
 
         $this->dispatch('hide-form', ['message' => 'updated successfully!']);

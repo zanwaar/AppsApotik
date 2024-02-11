@@ -47,6 +47,8 @@
                                 <li class="list-group-item">Jenis Obat - {{$state['jenis_obat']}}</li>
                                 <li class="list-group-item">Nama Obat - {{$state['nama_obat']}}</li>
                                 <li class="list-group-item">Stok Obat - {{$state['stok']}}</li>
+                                <li class="list-group-item">Harga Beli - Rp. {{ number_format(floatval($state['hargabeli']), 0, ',', '.') }}</li>
+                                <li class="list-group-item">Harga Jual - Rp. {{ number_format(floatval($state['hargajual']), 0, ',', '.') }}</li>
                                 <li class="list-group-item">
                                     <div class="form-inline">
                                         <label for="email" class="mr-sm-2">Quantity</label>
@@ -63,22 +65,14 @@
                             <div class="">
                                 <div class="mb-2">
                                     <input type="hidden" wire:model.defer="state.nama_obat" style="border-radius: 6px; " class="form-control @error('nama_obat') is-invalid @enderror" id="nama_obat" placeholder="Maukan Nama Obat">
-                                    @error('nama_obat')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
+
                                 </div>
                             </div>
 
                             <div class="">
                                 <div class="mb-2">
                                     <input type="hidden" wire:model.defer="state.hargabeli" style="border-radius: 6px; " class="form-control @error('hargabeli') is-invalid @enderror" id="hargabeli" placeholder="Masukan Hargabeli ">
-                                    @error('hargabeli')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
+
                                 </div>
                             </div>
 
@@ -210,8 +204,8 @@
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="harga">harga Beli</label>
-                                        <input type="text" wire:model.defer="state.hargabeli" style="border-radius: 6px; height: 42px;" class="form-control @error('harga') is-invalid @enderror" id="harga" placeholder="Masukan Harga Beli">
-                                        @error('harga')
+                                        <input type="text" wire:model.defer="state.hargabeli" style="border-radius: 6px; height: 42px;" class="form-control @error('hargabeli') is-invalid @enderror" id="hargabeli" placeholder="Masukan Harga Beli">
+                                        @error('hargabeli')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -221,8 +215,8 @@
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label for="harga">harga Jual</label>
-                                        <input type="text" wire:model.defer="state.hargajual" style="border-radius: 6px; height: 42px;" class="form-control @error('harga') is-invalid @enderror" id="harga" placeholder="Masukan Harga Jual">
-                                        @error('harga')
+                                        <input type="text" wire:model.defer="state.hargajual" style="border-radius: 6px; height: 42px;" class="form-control @error('hargajual') is-invalid @enderror" id="hargajual" placeholder="Masukan Harga Jual">
+                                        @error('hargajual')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -309,7 +303,8 @@
                                                 <tr class="bg-{{ $transaksi->status_badge }} text-white">
                                                     <th data-width="5%">#</th>
                                                     <th data-width="20%">Item</th>
-                                                    <th data-width="20%">Harga</th>
+                                                    <th data-width="20%">Harga Beli</th>
+                                                    <th data-width="20%">Harga Jual</th>
                                                     <th data-width="10%" class="text-center">Quantity</th>
                                                     <th data-width="20%">Totals</th>
                                                 </tr>
@@ -317,6 +312,7 @@
                                                 <tr>
                                                     <td>{{$index + 1}}</td>
                                                     <td>{{$dt->obat->nama_obat}}</td>
+                                                    <td>Rp. {{number_format($dt->obat->harga_beli, 0, ',', '.')}}</td>
                                                     <td>Rp. {{number_format($dt->obat->harga_jual, 0, ',', '.')}}</td>
                                                     <td class="text-center">{{ $dt->quantity }}</td>
                                                     <td>Rp. {{number_format($dt->total_price, 0, ',', '.')}}</td>
@@ -361,7 +357,13 @@
 <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
 <script>
     window.addEventListener("show-form", function(event) {
-        $("#form").modal("show");
+        $("#form").modal({
+            show: true,
+            backdrop: 'static',
+        });
+    });
+    window.addEventListener("show-hidden", function(event) {
+        $("#form").modal("hide");
     });
     window.addEventListener("show", function(event) {
         $("#masukmodal").modal("show");

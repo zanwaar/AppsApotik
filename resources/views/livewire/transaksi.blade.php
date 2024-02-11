@@ -18,7 +18,7 @@
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="card card-statistic-2">
-                    <div wire:click="addkeluar()" class="card-icon shadow-primary bg-success" style="border-radius: 50%; cursor: pointer;">
+                    <div wire:click="addmasuk()" class="card-icon shadow-primary bg-success" style="border-radius: 50%; cursor: pointer;">
                             <i class="fas fa-plus"></i>
                         </div>
                         <div class="card-wrap">

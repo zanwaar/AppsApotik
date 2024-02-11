@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('harga_beli');
             $table->integer('harga_jual');
             $table->integer('stok');
-            $table->dateTime('expired');
+            $table->date('expired');
             $table->timestamps();
         });
     }

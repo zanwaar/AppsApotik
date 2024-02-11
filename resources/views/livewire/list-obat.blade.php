@@ -83,22 +83,33 @@
 
 
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <div class="form-group">
-                                                            <label for="harga">harga</label>
-                                                            <input type="text" wire:model.defer="state.harga" style="border-radius: 6px; height: 42px;" class="form-control @error('harga') is-invalid @enderror" id="harga" placeholder="Masukan Harga ">
-                                                            @error('harga')
+                                                            <label for="harga">harga Beli</label>
+                                                            <input type="text" wire:model.defer="state.harga_beli" style="border-radius: 6px; height: 42px;" class="form-control @error('hargabeli') is-invalid @enderror" id="hargabeli" placeholder="Masukan Harga Beli">
+                                                            @error('hargabeli')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
                                                             </div>
                                                             @enderror
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <div class="form-group">
-                                                            <label for="stok">stok</label>
-                                                            <input type="text" wire:model.defer="state.stok" style="border-radius: 6px; height: 42px;" class="form-control @error('stok') is-invalid @enderror" id="stok" placeholder="Masukan Stok ">
-                                                            @error('stok')
+                                                            <label for="harga">harga Jual</label>
+                                                            <input type="text" wire:model.defer="state.harga_jual" style="border-radius: 6px; height: 42px;" class="form-control @error('hargajual') is-invalid @enderror" id="hargajual" placeholder="Masukan Harga Jual">
+                                                            @error('hargajual')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="stok">quantity</label>
+                                                            <input type="number" wire:model.defer="state.stok" style="border-radius: 6px; height: 42px;" class="form-control @error('quantity') is-invalid @enderror" id="stok">
+                                                            @error('quantity')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
                                                             </div>
@@ -142,10 +153,11 @@
                                             <th>Kode Obat</th>
                                             <th>Nama Obat</th>
                                             <th>Jenis Obat</th>
-                                            <th>Harga</th>
+                                            <th>Harga Beli</th>
+                                            <th>Harga Jual</th>
                                             <th>Stok</th>
                                             <th>Status Expired</th>
-                                            <th>Tgl Expired</th>
+                                            <!-- <th>Tgl Expired</th> -->
                                             <th class="text-right">Action </th>
                                         </tr>
                                     </thead>
@@ -156,13 +168,11 @@
                                             <td>{{ $dt->kode}}</td>
                                             <td>{{ $dt->nama_obat}}</td>
                                             <td>{{ $dt->jenis_obat}}</td>
-                                            <td>{{ $dt->harga}}</td>
+                                            <td>{{ $dt->harga_beli}}</td>
+                                            <td>{{ $dt->harga_jual}}</td>
                                             <td>{{ $dt->stok}}</td>
-                                            <td>
-                                                <div class="badge badge-success">expired</div>
-                                            </td>
-                                            <td>{{ $dt->expired}}
-                                            </td>
+                                            <td> {!! $dt->status['badge'] !!} </td>
+                                            <!-- <td>   <div class="badge badge-danger">Kedaluwarsa</div> </td> -->
                                             <td class="text-right pr-3">
                                                 <a wire:click.prevent="edit({{ $dt }})" class="btn btn-primary"><i class="fas fa-pencil-alt"></i></a>
                                                 <a wire:click.prevent="confirmRemoval({{ $dt }})" class="btn btn-danger"><i class="fas fa-trash"></i></a>

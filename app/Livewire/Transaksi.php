@@ -11,8 +11,11 @@ class Transaksi extends Component
     public $statusbg = 'primary';
     public function addkeluar()
     {
- 
         return redirect()->route('add-transaksi-keluar');
+    }
+    public function addmasuk()
+    {
+        return redirect()->route('add-transaksi-masuk');
     }
     public function getTransaksiProperty()
     {

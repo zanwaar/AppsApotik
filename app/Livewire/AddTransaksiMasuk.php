@@ -6,6 +6,7 @@ use App\Models\DataObat;
 use App\Models\DetailTransaksi;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
 class AddTransaksiMasuk extends Component
@@ -24,12 +25,13 @@ class AddTransaksiMasuk extends Component
         'jenis_obat' => '',
         'kode' => '',
         'nama_obat' => '',
-        'hargabeli' => '',
-        'hargajual' => '',
+        'hargabeli' => 0,
+        'hargajual' => 0,
         'quantity' => '',
         'stok' => '',
         'total' => 0,
         'expired' => '',
+        'type' => '',
     ];
     public function addNew()
     {
@@ -48,12 +50,12 @@ class AddTransaksiMasuk extends Component
     }
     public function savetodb()
     {
+
         if ($this->tasks == null) {
             dd('error');
             // $this->dispatch('show', ['message' => 'added successfully!', 'icon' => 'success']);
         }
         DB::beginTransaction();
-
         try {
             $transaksi = Transaksi::create([
                 'status' => 'Masuk',
@@ -62,27 +64,24 @@ class AddTransaksiMasuk extends Component
             ]);
             $this->transaksi = $transaksi;
             $collect = collect($this->tasks);
-
             // Loop melalui setiap obat dalam transaksi
             $collect->each(function ($obat) use ($transaksi) {
                 // Kurangi stok obat berdasarkan kuantitas yang dijual
                 $obatModel = DataObat::find($obat['id']);
-
                 if ($obatModel) {
-                    $newStok = $obatModel->stok - $obat['quantity'];
+                    $newStok = $obatModel->stok + $obat['quantity'];
 
                     // Pastikan stok tidak menjadi negatif
                     $obatModel->stok = max(0, $newStok);
                     $obatModel->save();
                 }
-
                 // Simpan detail transaksi
                 DetailTransaksi::create([
                     'transaksi_id' => $transaksi->id,
                     'data_obat_id' => $obat['id'],
                     'quantity' => $obat['quantity'],
-                    'harga_jual' => $obat['harga'],
-                    'harga_beli' => $obat['harga'],
+                    'harga_jual' => $obat['hargajual'],
+                    'harga_beli' => $obat['hargabeli'],
                     'total_price' => $obat['total'],
                     'expired' => $obat['expired'],
                 ]);
@@ -96,18 +95,22 @@ class AddTransaksiMasuk extends Component
                 'jenis_obat' => '',
                 'kode' => '',
                 'nama_obat' => '',
-                'harga' => '',
+                'hargabeli' => 0,
+                'hargajual' => 0,
                 'quantity' => '',
                 'stok' => '',
                 'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
                 'expired' => '',
+                'type' => '',
             ];
             $this->dispatch('show', ['message' => 'added successfully!', 'icon' => 'success']);
+
             // If everything is successful, commit the transaction
             DB::commit();
         } catch (\Exception $e) {
             // Something went wrong, rollback the transaction
             DB::rollback();
+            dd($e->getMessage());
             // Optionally, you can log the error or handle it in another way
             // \log::error('Database transaction error: ' . $e->getMessage());
         }
@@ -119,13 +122,6 @@ class AddTransaksiMasuk extends Component
             'state.quantity' => 'required|numeric',
         ]);
 
-
-
-        // Periksa jika jumlah yang diminta melebihi stok
-        if ($this->state['stok'] < $this->state['quantity']) {
-            return $this->dispatch('allert', ['message' => 'Stok tidak mencukupi', 'icon' => 'warning']);
-        }
-
         // Periksa jika id obat sudah ada dalam tasks
         if (collect($this->tasks)->contains('id', $this->idobat)) {
             $this->state = [
@@ -133,12 +129,13 @@ class AddTransaksiMasuk extends Component
                 'jenis_obat' => '',
                 'kode' => '',
                 'nama_obat' => '',
-                'hargabeli' => '',
-                'hargajual' => '',
+                'hargabeli' => 0,
+                'hargajual' => 0,
                 'quantity' => '',
                 'stok' => '',
                 'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
                 'expired' => '',
+                'type' => '',
             ];
             return $this->dispatch('allert', ['message' =>
             'ID obat sudah ada dalam tasks', 'icon' => 'error']);
@@ -162,28 +159,40 @@ class AddTransaksiMasuk extends Component
             'stok' => '',
             'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
             'expired' => '',
+            'type' => '',
         ];
         session()->flash('message', 'Data obat berhasil ditambahkan.');
     }
     public function addTaskDb()
     {
-        // Validasi formulir sebelum menambahkannya ke dalam array
-        $this->validate([
-            'state.quantity' => 'required|numeric',
-            'state.jenis_obat' => 'required',
-            'state.kode' => 'required|unique:data_obats,kode', // Unique validation rule for 'kode' field in 'data_obats' table
-            'state.nama_obat' => 'required|unique:data_obats,nama_obat', // Unique validation rule for 'nama_obat' field in 'data_obats' table
-            'state.hargabeli' => 'required',
-            'state.hargajual' => 'required',
-            'state.expired' => 'required',
-        ]);
+        $validatedData = Validator::make(
+            $this->state,
+            [
+                'quantity' => 'required|numeric',
+                'jenis_obat' => 'required',
+                'kode' => 'required|unique:data_obats,kode',
+                'nama_obat' => 'required|unique:data_obats,nama_obat',
+                'hargabeli' => 'required',
+                'hargajual' => 'required',
+                'expired' => 'required',
+            ],
+        )->validate();
+
+        // if ($validator->fails()) {
+        //     // Handle validation failure, you can access errors using $validator->errors()
+        //     // For example, you can redirect back with errors
+        //     return redirect()->back()->withErrors($validator)->withInput();
+        // } else {
+        //     // Validation passed, proceed with your logic
+        // }
+
         $data = DataObat::create([
             'kode' => $this->state['kode'],
             'jenis_obat' => $this->state['jenis_obat'],
             'nama_obat' => $this->state['nama_obat'],
             'harga_beli' => $this->state['hargabeli'],
             'harga_jual' => $this->state['hargajual'],
-            'stok' => $this->state['quantity'],
+            'stok' => 0,
             'expired' => $this->state['expired'],
         ]);
         // Menambahkan harga obat ke total harga
@@ -198,6 +207,7 @@ class AddTransaksiMasuk extends Component
             'quantity' => $this->state['quantity'],
             'total' =>  $this->state['total'],
             'expired' => $data->expired,
+            'type' => 'db',
         ];
         // Menambahkan harga obat ke total harga
         $this->sumharga += $this->state['total'];
@@ -208,13 +218,15 @@ class AddTransaksiMasuk extends Component
             'jenis_obat' => '',
             'kode' => '',
             'nama_obat' => '',
-            'harga' => '',
+            'hargabeli' => 0,
+            'hargajual' => 0,
             'quantity' => '',
             'stok' => '',
             'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
             'expired' => '',
+            'type' => '',
         ];
-        session()->flash('message', 'Data obat berhasil ditambahkan.');
+        $this->dispatch('show-hidden', ['message' => 'added successfully!', 'icon' => 'success']);
     }
 
     public function editTask($index)
@@ -232,10 +244,13 @@ class AddTransaksiMasuk extends Component
         $removedTask = array_splice($this->tasks, $index, 1)[0];
         // Mengurangkan harga obat yang dihapus dari total harga
         $this->sumharga -= $removedTask['total'];
-        $obat = DataObat::findOrFail($removedTask['id']);
-        $obat->delete();
+        if ($removedTask['type'] == 'db') {
+            $obat = DataObat::findOrFail($removedTask['id']);
+            $obat->delete();
+            $this->dispatch('allert', ['message' => 'Berhasil dihapus dan db juga', 'icon' => 'success']);
+        }
         // Optional: Tambahkan pesan sukses atau umpan balik lainnya
-        session()->flash('message', 'Data obat berhasil dihapus.');
+
     }
     public function render()
     {
@@ -252,6 +267,7 @@ class AddTransaksiMasuk extends Component
                 'quantity' => 1,
                 'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
                 'expired' => $dataobat->expired,
+                'type' => 'get',
             ];
         }
         return view('livewire.add-transaksi-masuk');

@@ -45,7 +45,7 @@
 
 <body>
     <div class="invoice">
-        <h2>Transaksi Keluar</h2>
+        <h2>Transaksi Masuk</h2>
         <p><strong>Invoice Number:</strong> {{$transaksi->invoice}}</p>
         <p><strong>Date:</strong> {{date("j F, Y", strtotime($transaksi->tanggal))}}</p>
 
@@ -54,7 +54,8 @@
                 <tr>
                     <th>Item</th>
                     <th>Quantity</th>
-                    <th>Harga</th>
+                    <th>Harga Beli</th>
+                    <th>Harga Jual</th>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -63,6 +64,7 @@
                 <tr>
                     <td>{{$dt->obat->nama_obat}}</td>
                     <td>{{ $dt->quantity }}</td>
+                    <td>Rp. {{number_format($dt->obat->harga_beli, 0, ',', '.')}}</td>
                     <td>Rp. {{number_format($dt->obat->harga_jual, 0, ',', '.')}}</td>
                     <td>Rp. {{number_format($dt->total_price, 0, ',', '.')}}</td>
                 </tr>
