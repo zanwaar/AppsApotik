@@ -4,9 +4,12 @@ namespace App\Livewire;
 
 use App\Models\Transaksi as ModelsTransaksi;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Transaksi extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $status = 'Keluar';
     public $statusbg = 'primary';
     public function addkeluar()
@@ -17,7 +20,7 @@ class Transaksi extends Component
     {
         return redirect()->route('add-transaksi-masuk');
     }
-    public function getTransaksiProperty()
+    public function getTransaksiProperty() 
     {
         return ModelsTransaksi::latest()->where(function ($query) {
             $query->where('status', $this->status);

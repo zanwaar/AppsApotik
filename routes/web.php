@@ -22,6 +22,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return view('dashboard', ['type_menu' => 'dashboard']);
     })->name('home');
+    Route::get('/home', function () {
+        return view('dashboard', ['type_menu' => 'dashboard']);
+    })->name('home');
     Route::get('/transaksi', function () {
         return view('transaksi', ['type_menu' => 'transaksi']);
     })->name('transaksi');
@@ -36,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('add-transaksi-keluar', AddTransaksiKeluar::class)->name('add-transaksi-keluar');
     Route::get('add-transaksi-masuk', AddTransaksiMasuk::class)->name('add-transaksi-masuk');
     Route::get('cetakpdf/{id}', [ObatController::class, 'cetak_pdf'])->name('cetakpdf');
+    Route::post('laporanpdf', [ObatController::class, 'laporanpdf'])->name('laporanpdf');
 });
 Route::get('/fetch', [ObatController::class, 'fetch'])->name('fetch');
 // Layout

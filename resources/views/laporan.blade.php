@@ -3,7 +3,7 @@
 @section('title', 'Laporan')
 
 @push('style')
-<!-- CSS Libraries -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endpush
 
 @section('main')
@@ -19,16 +19,20 @@
                 <div class="breadcrumb-item">Laporan</div>
             </div>
         </div>
-
+        <livewire:laporan />
 
     </section>
 </div>
 @endsection
 
 @push('scripts')
-<!-- JS Libraies -->
-<script src="{{ asset('library/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
-<!-- Page Specific JS File -->
-<script src="{{ asset('js/page/components-table.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr('#range_tanggal', {
+        altInput: true,
+        altFormat: "j F, Y",
+        dateFormat: "Y-m-d",
+    });
+</script>
 @endpush
