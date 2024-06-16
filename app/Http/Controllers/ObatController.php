@@ -7,6 +7,8 @@ use App\Models\DetailTransaksi;
 use App\Models\Transaksi;
 use PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ObatController extends Controller
 {
@@ -70,5 +72,31 @@ class ObatController extends Controller
             ];
         });
         return response()->json($responseData);
+    }
+    public function keluarChartData()
+    {
+        $data = Transaksi::where('status', 'Keluar')
+            ->whereDate('tanggal', '>', now()->subDays(30))
+            ->orderBy('tanggal')
+            ->get()
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->tanggal)->format('Y-m-d');
+            })
+            ->map(function ($item, $key) {
+                return $item->sum('total_price');
+            });
+
+        return response()->json($data);
+    }
+    public function topSellingDrugs()
+    {
+        $topDrugs = DataObat::select('data_obats.id', 'data_obats.kode', 'data_obats.nama_obat', DB::raw('SUM(detail_transaksis.quantity) as total_quantity'))
+            ->join('detail_transaksis', 'data_obats.id', '=', 'detail_transaksis.data_obat_id')
+            ->groupBy('data_obats.id', 'data_obats.kode', 'data_obats.nama_obat')
+            ->orderByDesc('total_quantity')
+            ->limit(5)
+            ->get();
+
+        return response()->json($topDrugs);
     }
 }

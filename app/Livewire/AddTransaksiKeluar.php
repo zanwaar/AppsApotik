@@ -205,17 +205,51 @@ class AddTransaksiKeluar extends Component
     {
         $dataobat = DataObat::find($this->idobat);
         if ($dataobat != null) {
-            $this->state = [
-                'id' => $dataobat->id,
-                'jenis_obat' => $dataobat->jenis_obat,
-                'kode' => $dataobat->kode,
-                'nama_obat' => $dataobat->nama_obat,
-                'harga' => intval($dataobat->harga_jual),
-                'stok' => $dataobat->stok,
-                'quantity' => 1,
-                'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
-                'expired' => $dataobat->expired,
-            ];
+            if ($dataobat->status['op'] == '1') {
+                 $this->dispatch('allert', ['message' => $dataobat->status['status'], 'icon' => 'error']);
+                 $this->state = [
+                    'id' => '',
+                    'jenis_obat' => '',
+                    'kode' => '',
+                    'nama_obat' => '',
+                    'harga' => '',
+                    'quantity' => '',
+                    'stok' => '',
+                    'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
+                    'expired' => '',
+                ];
+              
+            }
+            if ($dataobat->status['op'] == '2') {
+                $this->dispatch('allert', ['message' => $dataobat->status['status'], 'icon' => 'warning']);
+                $this->state = [
+                    'id' => $dataobat->id,
+                    'jenis_obat' => $dataobat->jenis_obat,
+                    'kode' => $dataobat->kode,
+                    'nama_obat' => $dataobat->nama_obat,
+                    'harga' => intval($dataobat->harga_jual),
+                    'stok' => $dataobat->stok,
+                    'quantity' => 1,
+                    'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
+                    'expired' => $dataobat->expired,
+                ];
+            }
+           
+            if ($dataobat->status['op'] == '3') {
+                $this->state = [
+                    'id' => $dataobat->id,
+                    'jenis_obat' => $dataobat->jenis_obat,
+                    'kode' => $dataobat->kode,
+                    'nama_obat' => $dataobat->nama_obat,
+                    'harga' => intval($dataobat->harga_jual),
+                    'stok' => $dataobat->stok,
+                    'quantity' => 1,
+                    'total' => 0, // Reset total ke 0 setelah data obat ditambahkan
+                    'expired' => $dataobat->expired,
+                ];
+            }
+           
+       
         }
         return view('livewire.add-transaksi-keluar');
     }

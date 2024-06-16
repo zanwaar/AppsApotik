@@ -41,6 +41,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cetakpdf/{id}', [ObatController::class, 'cetak_pdf'])->name('cetakpdf');
     Route::post('laporanpdf', [ObatController::class, 'laporanpdf'])->name('laporanpdf');
 });
+Route::get('keluar-chart-data', [ObatController::class, 'keluarChartData'])->name('keluar-chart-data');
+Route::get('top-selling-drugs', [ObatController::class, 'topSellingDrugs'])->name('top-selling-drugs');
 Route::get('/fetch', [ObatController::class, 'fetch'])->name('fetch');
 // Layout
 Route::get('/layout-default-layout', function () {

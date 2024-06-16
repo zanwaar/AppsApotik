@@ -8,12 +8,12 @@
 @endpush
 
 @section('main')
-<div class="card card-primary">
-    <div class="card-header">
-        <h4>Login</h4>
-    </div>
+<div class="card card-success mt-5">
 
     <div class="card-body">
+        <div class="login-brand" style="padding: 0; margin:0;">
+            <img src="{{ asset('img/logo.jpeg') }}" alt="logo" width="100" class="">
+        </div>
         <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate="">
             @csrf
             <div class="form-group">
@@ -46,7 +46,7 @@
 
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
+                    <button type="submit" class="btn btn-success btn-lg btn-block" tabindex="4">
                         Login
                     </button>
                 </div>
@@ -55,7 +55,6 @@
 
     </div>
 </div>
-
 @endsection
 
 @push('scripts')

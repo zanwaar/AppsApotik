@@ -18,10 +18,13 @@ class TransaksiFactory extends Factory
     {
 
         $faker = \Faker\Factory::create();
+        $startDate = strtotime('2023-12-27');
+        $endDate = strtotime('now');
+
         return [
             'status' => $faker->randomElement(['Keluar', 'Masuk']),
             'invoice' => $this->generateRandomInvoice(),
-            'tanggal' => now()
+            'tanggal' => date('Y-m-d', mt_rand($startDate, $endDate)),
         ];
     }
     function generateRandomInvoice()
